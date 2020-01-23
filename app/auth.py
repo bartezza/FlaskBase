@@ -16,9 +16,9 @@ from wtforms.validators import (DataRequired,
 from flask_login import LoginManager
 
 
-auth_bp = Blueprint('auth_bp', __name__,
-                    template_folder='templates',
-                    static_folder='static')
+auth_bp = Blueprint("auth_bp", __name__,
+                    template_folder="templates",
+                    static_folder="static")
 
 
 DEFAULT_REDIRECT = "main_bp.index"
@@ -52,7 +52,7 @@ class SimpleUser(UserMixin):
 
 # login_manager = None
 login_manager = LoginManager()
-users = []  # type: List[SimpleUser]
+app_users = []  # type: List[SimpleUser]
 
 
 def init_login(the_app):
@@ -60,33 +60,32 @@ def init_login(the_app):
     # login_manager = LoginManager()
     login_manager.init_app(the_app)
 
-    global users
+    global app_users
+    users = []
     for k, u in USER_DETAILS.items():
         users.append(SimpleUser(data=u))
-    users = {u.get_id(): u for u in users}
-
-    print(users)
+    app_users = {u.get_id(): u for u in users}
 
 
 class LoginForm(Form):
     """User Login Form."""
 
-    # email = StringField('Email', validators=[DataRequired('Please enter a valid email address.'),
-    #                                          Email('Please enter a valid email address.')])
-    password = PasswordField('Password', validators=[DataRequired("Password is required")])
+    # email = StringField("Email", validators=[DataRequired("Please enter a valid email address."),
+    #                                          Email("Please enter a valid email address.")])
+    password = PasswordField("Password", validators=[DataRequired("Password is required")])
     submit = SubmitField("Login")
 
 
 def check_password(password: str):
-    global users
-    for user_id, user in users.items():
+    global app_users
+    for user_id, user in app_users.items():
         if user.check_password(password):
             return user
     return None
 
 
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route("/login", methods=["GET", "POST"])
 def login_page():
     """User login page."""
     # Bypass Login screen if user is logged in
@@ -94,38 +93,34 @@ def login_page():
         return redirect(url_for(DEFAULT_REDIRECT))
     login_form = LoginForm(request.form)
     # POST: Create user and redirect them to the app
-    if request.method == 'POST':
+    if request.method == "POST":
         if login_form.validate():
             # Get Form Fields
-            # email = request.form.get('email')
-            password = request.form.get('password')
+            # email = request.form.get("email")
+            password = request.form.get("password")
             # Validate Login Attempt
             user = check_password(password=password)
             if user is not None:
                 login_user(user)
-                nnext = request.args.get('next')
+                nnext = request.args.get("next")
                 return redirect(nnext or url_for(DEFAULT_REDIRECT))
         flash("Invalid password")
         return redirect(url_for("auth_bp.login_page"))
 
-    # GET: Serve Log-in page
-    return render_template('login.html',
-                           form=LoginForm())
+    return render_template("login.html", form=LoginForm())
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    global users
-    """Check if user is logged-in on every page load."""
+    global app_users
     if user_id is not None:
-        return users.get(user_id)
+        return app_users.get(user_id)
     return None
 
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    """Redirect unauthorized users to Login page."""
-    flash('You must be logged in to view that page.')
+    flash("Unauthorized")
     return redirect(url_for("auth_bp.login_page"))
 
 
