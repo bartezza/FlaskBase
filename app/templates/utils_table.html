@@ -1,0 +1,16 @@
+{% macro render_table(table) -%}
+<table class="w3-table-all w3-hoverable">
+<tr>
+    {% for header in table.headers %}
+    <th>{{ header }}</th>
+    {% endfor %}
+</tr>
+    {% for row in table.rows %}
+<tr>
+    {% for key in table.headers %}
+  <td>{{ row.get(key, '') | safe }}</td>
+    {% endfor %}
+</tr>
+    {% endfor %}
+</table>
+{%- endmacro %}

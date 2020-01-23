@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+<!--% from 'bootstrap/nav.html' import render_nav_item, render_breadcrumb_item %-->
+<!--% from 'bootstrap/utils.html' import render_messages %-->
+{% from 'utils_table.html' import render_table %}
+
+{% block content %}
+<div class="w3-container">
+<div class="w3-bar w3-black">
+  <a href="#" class="w3-bar-item w3-button">Home</a>
+    <a href="{{ url_for('auth_bp.logout') }}" class="w3-bar-item w3-button">Logout</a>
+</div>
+</div>
+{% if form %}
+<div class="w3-container">
+ <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>{{ form.search.label }}: {{ form.search(size=64) }} {{ form.submit() }}</p>
+ </form>
+</div>
+{% endif %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+<div class="w3-container w3-margin-top">
+    {% for message in messages %}
+    <div class="w3-panel w3-pale-red">{{ message }}</div>
+    {% endfor %}
+</div>
+  {% endif %}
+{% endwith %}
+
+{% if table %}
+<div class="w3-container w3-margin-top">
+{{ render_table(table) }}
+</div>
+{% endif %}
+
+{% if pre %}
+<div class="w3-container w3-margin-top">
+<pre style="white-space: pre; word-break: break-all;">{{ pre }}</pre>
+</div>
+{% endif %}
+
+{% if block %}
+{{ block | safe }}
+{% endif %}
+
+{% endblock %}

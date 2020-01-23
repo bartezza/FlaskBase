@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<!--% from 'bootstrap/nav.html' import render_nav_item, render_breadcrumb_item %-->
+<!--% from 'bootstrap/utils.html' import render_messages %-->
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+<div class="w3-container w3-margin-top">
+    {% for message in messages %}
+    <div class="w3-panel w3-pale-red">{{ message }}</div>
+    {% endfor %}
+</div>
+  {% endif %}
+{% endwith %}
+
+<div class="w3-container">
+ <form action="" method="post">
+    <p>{{ form.password.label }}: {{ form.password(size=32) }} {{ form.submit() }}</p>
+    {% if form.password.errors %}
+       <ul class="errors">
+         {% for error in form.password.errors %}<li>{{ error }}</li>{% endfor %}
+       </ul>
+     {% endif %}
+ </form>
+</div>
+
+{% endblock %}
