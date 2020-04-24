@@ -26,7 +26,7 @@ DEFAULT_REDIRECT = "main_bp.index"
 USER_DETAILS = {
     "user": {
         "id": "user",
-        "passwords": ["sha256$THE_HASH"],
+        "passwords": ["sha256$YX42GT9a$2477aec76a41f3caf3dc083bc30f1a0b04428829b36a94eeb74ea5d385835561"],
         "admin": True
     }
 }

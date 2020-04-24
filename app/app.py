@@ -1,10 +1,16 @@
 
+import os
 import sys
 import logging
 import coloredlogs
 from flask import Flask
 from .config import Config
 from .auth import init_login
+from dotenv import load_dotenv
+
+
+db = None
+config = None
 
 
 def create_app():
@@ -20,10 +26,25 @@ def create_app():
 
     _log = logging.getLogger(__name__)
 
+    dotenv_path = "my.env"
+    if os.path.isfile(dotenv_path):
+        load_dotenv(dotenv_path=dotenv_path)
+    else:
+        _log.error("Could not load {}".format(dotenv_path))
+    
+    Config.reload()
+    
+    global config
+    config = Config()
+
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config)
 
     init_login(app)
+
+    from .main_db import MainDB
+    global db
+    db = MainDB(config=config)
 
     with app.app_context():
         from .main import main_bp

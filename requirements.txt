@@ -2,3 +2,6 @@ flask
 flask-login
 flask-wtf
 coloredlogs
+python-dotenv
+pymongo
+

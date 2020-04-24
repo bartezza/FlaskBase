@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+<!--% from 'bootstrap/nav.html' import render_nav_item, render_breadcrumb_item %-->
+<!--% from 'bootstrap/utils.html' import render_messages %-->
+{% from 'utils_table.html' import render_table %}
+
+{% block pagestyles %}
+<!--  <link href="{{ url_for('static', filename='dist/css/dashboard.css') }}" rel="stylesheet" type="text/css">-->
+  <link rel="stylesheet" href="https://use.typekit.net/sus7rlu.css">
+{% endblock %}
+
+{% block content %}
+<div class="w3-container">
+<div class="w3-bar w3-black">
+    {% for nav in navigation %}
+    <a href="{{ nav.href }}"><button class="w3-bar-item w3-button {{ nav.css_class }}">{{ nav.title }}</button></a>
+    {% endfor %}
+</div>
+</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+<div class="w3-container w3-margin-top">
+    {% for category, message in messages %}
+    <div class="w3-panel w3-border {{ flash_colors.get(category, 'w3-pale-red') }}">{{ message }}</div>
+    {% endfor %}
+</div>
+  {% endif %}
+{% endwith %}
+
+{% if add_template %}
+<div class="w3-container w3-margin-top">
+{% include add_template %}
+</div>
+{% endif %}
+
+<div class="w3-container w3-margin-top">
+{{ block | safe }}
+</div>
+
+<div class="w3-container w3-margin-top">
+<pre style="white-space: pre; word-break: break-all;">{{ pre }}</pre>
+</div>
+{% endblock %}
