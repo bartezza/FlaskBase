@@ -77,8 +77,6 @@ class Layout:
         form_html += "</form>"
         cont = self.new_container(inner_html=form_html)
 
-        print(cont.html())
-
     def finish(self, add_template=None, **kwargs):
         params = {}
         if add_template is not None:
